@@ -35,6 +35,12 @@ stazioni_milano = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/staz
 
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    
+    return render_template('test.html')
+
+
 
 @app.route('/', methods=['GET'])
 def index():
