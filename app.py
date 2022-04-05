@@ -60,14 +60,16 @@ def test():
 
 @app.route('/', methods=['GET'])
 def index():
-    #ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                        #.set_index('nome')
+
+
+    #ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                       
     #ps = ps.to_html(index=False)
-    global ps
+    global ps #globale per altra route
     ps = piste_ciclabili['anagrafica'].drop_duplicates().to_list()
     ps = sorted(ps)  
     #ps = ps.to_html(index=False)
 
-    #folium mappa
+    #folium mappa for per creare comune
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
     for _, r in quartieri_milano.iterrows():
         
@@ -85,6 +87,8 @@ def index():
 
 @app.route('/testresult', methods=['GET'])
 def testresult():
+
+    #dopo selezione returna cio(puo fare infinito da ora):
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
     
     return render_template('index.html', map=m._repr_html_(), table=ps)
