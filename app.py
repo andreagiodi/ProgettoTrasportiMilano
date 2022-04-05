@@ -38,7 +38,7 @@ stazioni_milano = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/staz
 
 @app.route('/', methods=['GET'])
 def index():
-    ps = percorsi_superficie[['linea', 'nome']]                         #.set_index('nome')
+    ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                        #.set_index('nome')
     ps = ps.to_html(index=False)
 
 
