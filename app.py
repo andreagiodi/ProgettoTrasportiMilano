@@ -5,6 +5,7 @@ import io
 import pandas as pd
 import geopandas as gpd
 import contextily
+import folium
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib
@@ -17,7 +18,6 @@ area_sosta_car_sharing = gpd.read_file('/workspace/ProgettoTrasportiMilano/filez
 aree_velocita_lim = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/aree_velocita_lim.zip')
 bike_sosta = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/bike_sosta.zip')
 comuni = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/comuni.zip')
-#milano = comuni[comuni.NOME == 'Milano']
 comuni = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/comuni.zip')
 fermate_metro = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/fermate_metro.zip')
 fermate_superficie = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/fermate_superifcie.zip')
@@ -37,32 +37,57 @@ stazioni_milano = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/staz
 
 @app.route('/test', methods=['GET'])
 def test():
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
+    for _, r in quartieri_milano.iterrows():
+        
     
-    return render_template('test.html')
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'none'})
+        folium.Popup(r['NIL']).add_to(geo_j)
+        geo_j.add_to(m)
+    for _, r in piste_ciclabili.iterrows():
+        
+    
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'black'})
+        folium.Popup(r['anagrafica']).add_to(geo_j)
+        geo_j.add_to(m)
+    return render_template('test.html', test=m._repr_html_())
 
 
 
 @app.route('/', methods=['GET'])
 def index():
-    ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                        #.set_index('nome')
-    ps = ps.to_html(index=False)
+    #ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                        #.set_index('nome')
+    #ps = ps.to_html(index=False)
+    global ps
+    ps = piste_ciclabili['anagrafica'].drop_duplicates().to_list()
+    ps = sorted(ps)  
+    #ps = ps.to_html(index=False)
 
-    return render_template('index.html', table=ps)
-
-@app.route('/result.png', methods=['GET'])
-def result():
-
-    #quartieri = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/quartieri_milano.zip')
-
-    fig, ax = plt.subplots(figsize = (12,8))
-
-    quartieri_milano.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
-    contextily.add_basemap(ax=ax)
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+    #folium mappa
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
+    for _, r in quartieri_milano.iterrows():
+        
+    
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+        folium.Popup(r['NIL']).add_to(geo_j)
+        geo_j.add_to(m)
 
 
+
+
+    return render_template('index.html', table=ps, map=m._repr_html_())
+
+@app.route('/testresult', methods=['GET'])
+def testresult():
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
+    
+    return render_template('index.html', map=m._repr_html_(), table=ps)
 
 
 if __name__ == '__main__':

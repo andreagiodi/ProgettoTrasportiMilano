@@ -86,12 +86,22 @@
         <!-- parte sinistra pagina -->
         <div class="w3-row-padding">
             <div class="w3-half">
-                {{table|safe}}
+              <!--  {{table|safe}}-->
+              <form action="/testresult" method = "GET">
+                <select name="sel" id="sel" method="GET">
+                    {% for i in table%}
+                    <option value="{{i}}" SELECTED>{{i}}</option>
+                    {%endfor%}
+                  </select>
+                <p><input type = "submit" value = "Submit" /></p>
+            </form>
+
             </div>
 
-            <div class="w3-half" id="map">
+            <div class="w3-half" id="map" > 
                 <!-- parte destra pagina -->
-                <img src="/result.png" style="top: 300px; left: 300px;">
+                {{map|safe}}
+                <!-- <img src="/result.png" style="top: 300px; left: 300px;"> -->
             </div>
         </div>
 
