@@ -47,14 +47,20 @@ def index():
     ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                        #.set_index('nome')
     ps = ps.to_html(index=False)
 
-
-
-
-
-
-
     return render_template('index.html', table=ps)
 
+@app.route('/result.png', methods=['GET'])
+def result():
+
+    #quartieri = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/quartieri_milano.zip')
+
+    fig, ax = plt.subplots(figsize = (12,8))
+
+    quartieri_milano.to_crs(epsg=3857).plot(ax=ax, alpha=0.5)
+    contextily.add_basemap(ax=ax)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 
 
 
