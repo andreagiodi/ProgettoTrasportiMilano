@@ -6,3 +6,9 @@ th {
 nav {
     background-color: aqua;
 }
+
+#map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
