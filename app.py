@@ -18,7 +18,6 @@ area_sosta_car_sharing = gpd.read_file('/workspace/ProgettoTrasportiMilano/filez
 aree_velocita_lim = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/aree_velocita_lim.zip')
 bike_sosta = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/bike_sosta.zip')
 comuni = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/comuni.zip')
-comuni = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/comuni.zip')
 fermate_metro = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/fermate_metro.zip')
 fermate_superficie = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/fermate_superifcie.zip')
 fontanelle = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/Fontanelle.zip')

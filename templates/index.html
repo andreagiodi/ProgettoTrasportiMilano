@@ -86,8 +86,16 @@
         <!-- parte sinistra pagina -->
         <div class="w3-row-padding">
             <div class="w3-half">
-              <!--  {{table|safe}}-->
-              <form action="/testresult" method = "GET">
+              <!--  {{table|safe}}
+             <!- <form action="/testresult" method = "GET">
+                <select name="sel" id="sel" method="GET">
+                    {% for i in table%}
+                    <option value="{{i}}" SELECTED>{{i}}</option>
+                    {%endfor%}
+                  </select>
+                <p><input type = "submit" value = "Submit" /></p>
+            </form> -->
+            <form action="/resultdrop" method = "GET">
                 <select name="sel" id="sel" method="GET">
                     {% for i in table%}
                     <option value="{{i}}" SELECTED>{{i}}</option>
@@ -264,8 +272,7 @@
 
     <!-- W3.CSS Container -->
     <div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px">
-        <p class="w3-right">Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS"
-                target="_blank" class="w3-hover-opacity">w3.css</a></p>
+        <p class="w3-right">Powered by Comune Di Milano</p>
     </div>
 
     <script>
