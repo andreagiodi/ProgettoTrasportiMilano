@@ -97,9 +97,7 @@
             </form> -->
             <form action="/resultdrop" method = "GET">
                 <select name="sel" id="sel" method="GET">
-                    {% for i in table%}
                     <option value="{{i}}" SELECTED>{{i}}</option>
-                    {%endfor%}
                   </select>
                 <p><input type = "submit" value = "Submit" /></p>
             </form>
