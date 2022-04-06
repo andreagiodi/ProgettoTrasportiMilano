@@ -73,17 +73,34 @@ def index():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap') #CartoDB positron
     for _, r in quartieri_milano.iterrows():
         
-    
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
-
-
-
-
     return render_template('index.html', table=ps, map=m._repr_html_())
+
+
+@app.route('/resultdrop', methods=['GET'])
+def resultdrop():
+
+    #dopo selezione returna cio(puo fare infinito da ora):
+    lines = piste_ciclabili[piste_ciclabili['anagrafica']== request.args.get('sel')]
+    x, y = list(lines['geometry'])[0].coords.xy
+    m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
+    
+    
+    for _, r in lines.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+        folium.Popup(r['anagrafica']).add_to(geo_j)
+        geo_j.add_to(m)
+    
+    return render_template('index.html', map=m._repr_html_(), table=ps)
+
+
+
 
 @app.route('/testresult', methods=['GET'])
 def testresult():
