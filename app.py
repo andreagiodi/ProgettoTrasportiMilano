@@ -70,7 +70,7 @@ def index():
     #ps = ps.to_html(index=False)
 
     #folium mappa for per creare comune
-    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap') #CartoDB positron
     for _, r in quartieri_milano.iterrows():
         
     
@@ -89,7 +89,17 @@ def index():
 def testresult():
 
     #dopo selezione returna cio(puo fare infinito da ora):
-    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
+    lines = piste_ciclabili[piste_ciclabili['anagrafica']== request.args.get('sel')]
+    x, y = list(lines['geometry'])[0].coords.xy
+    m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
+    
+    
+    for _, r in lines.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+        folium.Popup(r['anagrafica']).add_to(geo_j)
+        geo_j.add_to(m)
     
     return render_template('index.html', map=m._repr_html_(), table=ps)
 
