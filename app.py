@@ -63,9 +63,9 @@ def index():
 
     #ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                       
     #ps = ps.to_html(index=False)
-    global ps #globale per altra route
-    ps = piste_ciclabili['anagrafica'].drop_duplicates().to_list()
-    ps = sorted(ps)  
+    #global ps #globale per altra route
+    #ps = piste_ciclabili['anagrafica'].drop_duplicates().to_list()
+    #ps = sorted(ps)  
     #ps = ps.to_html(index=False)
 
     #folium mappa for per creare comune
@@ -77,26 +77,27 @@ def index():
         geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
-    return render_template('index.html', table=ps, map=m._repr_html_())
+    return render_template('index.html', map=m._repr_html_())
 
 
 @app.route('/resultdrop', methods=['GET'])
 def resultdrop():
-
+    
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     #dopo selezione returna cio(puo fare infinito da ora):
-    lines = piste_ciclabili[piste_ciclabili['anagrafica']== request.args.get('sel')]
-    x, y = list(lines['geometry'])[0].coords.xy
-    m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
+    if request.args.get('sel') == 'area_sosta': #AREA_SOSTA
+        #area_sosta_car_sharing = gpd.geodataframe(area_sosta_car_sharing, geometry= gpd.points_from_xy(area_sosta_car_sharing.LONG_X_4326, area_sosta_car_sharing.LAT_Y_4326))
+        
+        for _, row in area_sosta_car_sharing.iterrows():
+            print(row)
+            folium.Marker(
+            
+            location=[row["LAT_Y_4326"], row["LONG_X_4326"]],
+            popup=row['AREA_SOSTA'],
+            icon=folium.map.Icon(color='green')
+            ).add_to(m)
     
-    
-    for _, r in lines.iterrows():
-        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
-        geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
-        folium.Popup(r['anagrafica']).add_to(geo_j)
-        geo_j.add_to(m)
-    
-    return render_template('index.html', map=m._repr_html_(), table=ps)
+    return render_template('index.html', map=m._repr_html_())
 
 
 
@@ -105,20 +106,37 @@ def resultdrop():
 def testresult():
 
     #dopo selezione returna cio(puo fare infinito da ora):
-    lines = piste_ciclabili[piste_ciclabili['anagrafica']== request.args.get('sel')]
-    x, y = list(lines['geometry'])[0].coords.xy
-    m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
-    
-    
-    for _, r in lines.iterrows():
-        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
-        geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
-        folium.Popup(r['anagrafica']).add_to(geo_j)
-        geo_j.add_to(m)
+    if request.args['sel'] == 'aree_sosta': #AREA_SOSTA
+        #area_sosta_car_sharing = gpd.geodataframe(area_sosta_car_sharing, geometry= gpd.points_from_xy(area_sosta_car_sharing.LONG_X_4326, area_sosta_car_sharing.LAT_Y_4326))
+        m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
+        for index, row in area_sosta_car_sharing.iterrows():
+            folium.Marker(
+            location=[row["LAT_Y_4326"], row["LONG_X_4326"]],
+            popup=row['AREA_SOSTA'],
+            icon=folium.map.Icon(color='green')
+            ).add_to(m)
+            
+
     
     return render_template('index.html', map=m._repr_html_(), table=ps)
 
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)
+
+
+
+
+
+#template di risposta a un dropdown 
+#lines = piste_ciclabili[piste_ciclabili['anagrafica']== request.args.get('sel')]
+    #x, y = list(lines['geometry'])[0].coords.xy
+    #m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
+    
+    
+    #for _, r in lines.iterrows():
+        #sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+        #geo_j = sim_geo.to_json()
+        #geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+        #folium.Popup(r['anagrafica']).add_to(geo_j)
+        #geo_j.add_to(m)
