@@ -32,9 +32,11 @@ sosta_turistici = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/sost
 stazioni_bikemi = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/stazioni_bikemi.zip')
 stazioni_milano = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/stazioni_milano.csv')
 
+area_sosta_car_sharing = area_sosta_car_sharing.to_crs(4326)
+area_sosta_car_sharing['lon'] = area_sosta_car_sharing['geometry'].x
+area_sosta_car_sharing['lat'] = area_sosta_car_sharing['geometry'].y
 
-
-@app.route('/test', methods=['GET'])
+@app.route('/test1', methods=['GET'])
 def test():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='CartoDB positron')
     for _, r in quartieri_milano.iterrows():
@@ -42,7 +44,7 @@ def test():
     
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
         geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'none'})
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'gray'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
     for _, r in piste_ciclabili.iterrows():
@@ -61,12 +63,7 @@ def test():
 def index():
 
 
-    #ps = percorsi_superficie[['linea', 'nome']].sort_values(['nome'], ascending=True)                       
-    #ps = ps.to_html(index=False)
-    #global ps #globale per altra route
-    #ps = piste_ciclabili['anagrafica'].drop_duplicates().to_list()
-    #ps = sorted(ps)  
-    #ps = ps.to_html(index=False)
+    
 
     #folium mappa for per creare comune
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap') #CartoDB positron
@@ -77,7 +74,7 @@ def index():
         geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
-    return render_template('index.html', map=m._repr_html_())
+    return render_template('index2.html', map=m._repr_html_())
 
 
 @app.route('/resultdrop', methods=['GET'])
@@ -86,18 +83,15 @@ def resultdrop():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     #dopo selezione returna cio(puo fare infinito da ora):
     if request.args.get('sel') == 'area_sosta': #AREA_SOSTA
-        #area_sosta_car_sharing = gpd.geodataframe(area_sosta_car_sharing, geometry= gpd.points_from_xy(area_sosta_car_sharing.LONG_X_4326, area_sosta_car_sharing.LAT_Y_4326))
-        
         for _, row in area_sosta_car_sharing.iterrows():
             print(row)
             folium.Marker(
-            
-            location=[row["LAT_Y_4326"], row["LONG_X_4326"]],
-            popup=row['AREA_SOSTA'],
+            location=[row["lat"], row["lon"]],
+            popup=row[['AREA_SOSTA', 'LOCALIZ']],
             icon=folium.map.Icon(color='green')
             ).add_to(m)
     
-    return render_template('index.html', map=m._repr_html_())
+    return render_template('index2.html', map=m._repr_html_())
 
 
 
@@ -111,7 +105,7 @@ def testresult():
         m = folium.Map(location=[y[0], x[0]], zoom_start=40, tiles='openstreetmap')
         for index, row in area_sosta_car_sharing.iterrows():
             folium.Marker(
-            location=[row["LAT_Y_4326"], row["LONG_X_4326"]],
+            #location=[row["LAT_Y_4326"], row["LONG_X_4326"]],
             popup=row['AREA_SOSTA'],
             icon=folium.map.Icon(color='green')
             ).add_to(m)
@@ -120,6 +114,15 @@ def testresult():
     
     return render_template('index.html', map=m._repr_html_(), table=ps)
 
+
+@app.route('/test', methods=['GET'])
+def test1():
+    ps = area_sosta_car_sharing.to_html()
+    
+            
+
+    
+    return render_template('test.html', table=ps)
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)
