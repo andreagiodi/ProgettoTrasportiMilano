@@ -1,6 +1,9 @@
 from flask import Flask, render_template, send_file, make_response, url_for, Response, request
 app = Flask(__name__)
 
+
+#pip install flask geopandas pandas contextily matplotlib folium
+
 import io
 import pandas as pd
 import geopandas as gpd
@@ -63,17 +66,15 @@ def test():
 def index():
 
 
-    
-
     #folium mappa for per creare comune
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap') #CartoDB positron
     for _, r in quartieri_milano.iterrows():
-        
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
+
     return render_template('index2.html', map=m._repr_html_())
 
 
@@ -81,7 +82,7 @@ def index():
 def resultdrop():
     
     m = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
-    #dopo selezione returna cio(puo fare infinito da ora):
+    #prima pagina
     if request.args.get('sel') == 'area_sosta': #AREA_SOSTA
         for _, row in area_sosta_car_sharing.iterrows():
             print(row)
@@ -90,6 +91,15 @@ def resultdrop():
             popup=row[['AREA_SOSTA', 'LOCALIZ']],
             icon=folium.map.Icon(color='green')
             ).add_to(m)
+    if request.args.get('sel') == 'aree_velocita': #aree_velocita
+        for _, r in aree_velocita_lim.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            folium.Popup(r['nome_via']).add_to(geo_j)
+            geo_j.add_to(m)
+
+    #seconda pagina
     
     return render_template('index2.html', map=m._repr_html_())
 
@@ -117,7 +127,7 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
-    ps = area_sosta_car_sharing.to_html()
+    ps = aree_velocita_lim.to_html()
     
             
 
