@@ -118,8 +118,7 @@ def resultdrop():
         for _, r in aree_velocita_lim.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
-            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {
-                                   'fillColor': 'blue'})
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['nome_via']).add_to(geo_j)
             geo_j.add_to(m)
 
