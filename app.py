@@ -100,7 +100,6 @@ def resultdrop():
 
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
-
     if request.args.get('sel') == 'area_sosta':  # AREA_SOSTA
         zip = area_sosta_car_sharing['AREA_SOSTA']
         key='true'
@@ -112,7 +111,6 @@ def resultdrop():
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
         # seconda pagina
-
     if request.args.get('sel') == 'aree_velocita':  # aree_velocita
         key='true'
         for _, r in aree_velocita_lim.iterrows():
@@ -130,9 +128,6 @@ def resultdrop1():
     #dropdown di risposta delle (vie) di area_sosta e ogni altro dataframe (ancora da fare)
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
-
-    
-
     return render_template('index2.html', map=m._repr_html_())
 
 
