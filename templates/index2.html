@@ -502,8 +502,25 @@
                         </div>
                         <!-- <p style="padding-top: 20px;"><input type="submit" value="Submit" /></p> -->
                         <br>
-                        <button type="submit" class="close">CIAO</button>
+                        <button type="submit" class="close">INVIA</button>
                     </form>
+
+                    {% if key == 'true' %}
+                    <form action="/resultdrop1" method="get">
+                        <div class="dropdown dropdown" style="width: 240px;">
+                            <select name="sel1" id='sel1' method="GET" class="dropdown-select">
+                                {% for i in zip%}
+                                    <option value="{{i}}" SELECTED>{{i}}</option>
+                                {%endfor%}
+                            </select>
+
+                        </div>
+                        <!-- <p style="padding-top: 20px;"><input type="submit" value="Submit" /></p> -->
+                        <br>
+                        <button type="submit" class="close">INVIA</button>
+                    </form>
+                    {% endif %}
+                    
 
                 </div>
 

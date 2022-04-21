@@ -52,6 +52,7 @@ stazioni_bikemi = gpd.read_file(
 stazioni_milano = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/stazioni_milano.csv')
 
+
 area_sosta_car_sharing = area_sosta_car_sharing.to_crs(4326)
 area_sosta_car_sharing['lon'] = area_sosta_car_sharing['geometry'].x
 area_sosta_car_sharing['lat'] = area_sosta_car_sharing['geometry'].y
@@ -65,8 +66,7 @@ def test():
 
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
         geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {
-                               'fillColor': 'gray'})
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'gray'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
     for _, r in piste_ciclabili.iterrows():
@@ -84,13 +84,11 @@ def test():
 def index():
 
     # folium mappa for per creare comune
-    m = folium.Map(location=[45.46220047218434, 9.191121737490482],
-                   zoom_start=12, tiles='openstreetmap')  # CartoDB positron
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')  # CartoDB positron
     for _, r in quartieri_milano.iterrows():
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
         geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {
-                               'fillColor': 'blue'})
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
 
@@ -104,9 +102,10 @@ def resultdrop():
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
 
     if request.args.get('sel') == 'area_sosta':  # AREA_SOSTA
+        zip = area_sosta_car_sharing['AREA_SOSTA']
+        key='true'
         # prima pagina
         for _, row in area_sosta_car_sharing.iterrows():
-            print(row)
             folium.Marker(
                 location=[row["lat"], row["lon"]],
                 popup=row[['AREA_SOSTA', 'LOCALIZ']],
@@ -115,6 +114,7 @@ def resultdrop():
         # seconda pagina
 
     if request.args.get('sel') == 'aree_velocita':  # aree_velocita
+        key='true'
         for _, r in aree_velocita_lim.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
@@ -123,7 +123,18 @@ def resultdrop():
             folium.Popup(r['nome_via']).add_to(geo_j)
             geo_j.add_to(m)
 
-    return render_template('index2.html', map=m._repr_html_(), map1=m1._repr_html_(), area_sosta=area_sosta_car_sharing.to_html())
+    return render_template('index2.html', map=m._repr_html_(), map1=m1._repr_html_(), area_sosta=area_sosta_car_sharing.to_html(), key=key ,zip=zip)
+
+
+@app.route('/resultdrop1', methods=['GET'])
+def resultdrop1():
+    #dropdown di risposta delle (vie) di area_sosta e ogni altro dataframe (ancora da fare)
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
+    m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
+
+    
+
+    return render_template('index2.html', map=m._repr_html_())
 
 
 @app.route('/testresult', methods=['GET'])
