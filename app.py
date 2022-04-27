@@ -101,18 +101,31 @@ def resultdrop():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     if request.args.get('sel') == 'area_sosta':  # AREA_SOSTA
+        global zip
         zip = area_sosta_car_sharing['AREA_SOSTA']
+        global zipg
+        zipg = area_sosta_car_sharing
+        global a
+        a = 'area_sosta_car_sharing'
         key='true'
+        #popup1 = zip.values[0]
         # prima pagina
         for _, row in area_sosta_car_sharing.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],
-                popup=row[['AREA_SOSTA', 'LOCALIZ']],
+                popup=row['AREA_SOSTA'],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
         # seconda pagina
     if request.args.get('sel') == 'aree_velocita':  # aree_velocita
+        
+        zip = aree_velocita_lim['nome_via']
+
+        zipg = aree_velocita_lim
+   
+        a = 'aree_velocita_lim'
         key='true'
+        
         for _, r in aree_velocita_lim.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
@@ -127,8 +140,25 @@ def resultdrop():
 def resultdrop1():
     #dropdown di risposta delle (vie) di area_sosta e ogni altro dataframe (ancora da fare)
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
-    m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
-    return render_template('index2.html', map=m._repr_html_())
+    key='true'
+    value = request.args.get('sel1')
+    if a == 'area_sosta_car_sharing':
+        value1 = zipg[zipg.AREA_SOSTA == value]
+        folium.Marker(
+            location=[value1["lat"], value1["lon"]],
+            popup=value1['AREA_SOSTA'].values[0],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m)
+    if a == 'aree_velocita_lim':
+        value1 = zipg[zipg.nome_via == value]
+        sim_geo = gpd.GeoSeries(value1['geometry']).simplify(tolerance=0.001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+        folium.Popup(value1['nome_via'].values[0]).add_to(geo_j)
+        geo_j.add_to(m)
+    #m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
+    
+    return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip)
 
 
 @app.route('/testresult', methods=['GET'])
@@ -151,7 +181,7 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
-    ps = area_sosta_car_sharing.to_html()
+    ps = aree_velocita_lim.to_html()
 
     return render_template('test.html', table=ps)
 
