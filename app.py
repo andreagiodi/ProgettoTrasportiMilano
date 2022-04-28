@@ -22,8 +22,6 @@ area_sosta_car_sharing = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/area_sosta_car_sharing.zip')
 aree_velocita_lim = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/aree_velocita_lim.zip')
-bike_sosta = gpd.read_file(
-    '/workspace/ProgettoTrasportiMilano/filezip/bike_sosta.zip')
 comuni = gpd.read_file('/workspace/ProgettoTrasportiMilano/filezip/comuni.zip')
 fermate_metro = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/fermate_metro.zip')
@@ -132,8 +130,24 @@ def resultdrop():
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['nome_via']).add_to(geo_j)
             geo_j.add_to(m)
+    if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie
+        
+        zip = aree_velocita_lim['nome_via']
 
-    return render_template('index2.html', map=m._repr_html_(), map1=m1._repr_html_(), area_sosta=area_sosta_car_sharing.to_html(), key=key ,zip=zip)
+        zipg = aree_velocita_lim
+   
+        a = 'aree_velocita'
+        key='true'
+        
+        for _, r in percorsi_superficie.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            folium.Popup(r['nome']).add_to(geo_j)
+            geo_j.add_to(m)
+
+
+    return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
 
 
 @app.route('/resultdrop1', methods=['GET'])
@@ -181,7 +195,7 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
-    ps = aree_velocita_lim.to_html()
+    ps = percorsi_superficie.to_html()
 
     return render_template('test.html', table=ps)
 
