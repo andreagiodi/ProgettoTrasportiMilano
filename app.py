@@ -49,7 +49,8 @@ stazioni_bikemi = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/stazioni_bikemi.zip')
 stazioni_milano = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/stazioni_milano.csv')
-
+bike_sosta = gpd.read_file(
+    '/workspace/ProgettoTrasportiMilano/filezip/bike_sosta.zip')
 
 area_sosta_car_sharing = area_sosta_car_sharing.to_crs(4326)
 area_sosta_car_sharing['lon'] = area_sosta_car_sharing['geometry'].x
@@ -133,12 +134,7 @@ def resultdrop():
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['nome_via']).add_to(geo_j)
             geo_j.add_to(m)
-
-    if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie
-        
-        zip = aree_velocita_lim['nome_via']
-
-    if request.args.get('sel') == 'aree_sosta_bike':  # bike_sosta
+    if request.args.get('sel') == 'aree_sosta_bike':  # aree_sostaBike
         
         zip = bike_sosta['categoriev']
 
@@ -153,7 +149,7 @@ def resultdrop():
                 popup=row['categoriev'],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
-    if request.args.get('sel') == 'fontanelle':  # bike_sosta
+    if request.args.get('sel') == 'fontanelle':  # fontanelle
         
         zip = fontanelle
 
@@ -167,18 +163,6 @@ def resultdrop():
                 location=[row["lat"], row["lon"]],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
-
-        zipg = aree_velocita_lim
-   
-        a = 'aree_velocita'
-        key='true'
-        
-        for _, r in percorsi_superficie.iterrows():
-            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
-            geo_j = sim_geo.to_json()
-            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
-            folium.Popup(r['nome']).add_to(geo_j)
-            geo_j.add_to(m)
 
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
