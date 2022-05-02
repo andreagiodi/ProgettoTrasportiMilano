@@ -54,12 +54,15 @@ stazioni_milano = gpd.read_file(
 area_sosta_car_sharing = area_sosta_car_sharing.to_crs(4326)
 area_sosta_car_sharing['lon'] = area_sosta_car_sharing['geometry'].x
 area_sosta_car_sharing['lat'] = area_sosta_car_sharing['geometry'].y
-
+bike_sosta['lon'] = bike_sosta['geometry'].x
+bike_sosta['lat'] = bike_sosta['geometry'].y
+bike_sosta.dropna(inplace=True)
+fontanelle['lon'] = fontanelle['geometry'].x
+fontanelle['lat'] = fontanelle['geometry'].y
 
 @app.route('/test1', methods=['GET'])
 def test():
-    m = folium.Map(location=[45.46220047218434, 9.191121737490482],
-                   zoom_start=12, tiles='CartoDB positron')
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='CartoDB positron')
     for _, r in quartieri_milano.iterrows():
 
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
@@ -130,9 +133,40 @@ def resultdrop():
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['nome_via']).add_to(geo_j)
             geo_j.add_to(m)
+
     if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie
         
         zip = aree_velocita_lim['nome_via']
+
+    if request.args.get('sel') == 'aree_sosta_bike':  # bike_sosta
+        
+        zip = bike_sosta['categoriev']
+
+        zipg = bike_sosta
+   
+        a = 'bike_sosta'
+        key='false'
+        
+        for _, row in bike_sosta.iterrows():
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=row['categoriev'],
+                icon=folium.map.Icon(color='green')
+            ).add_to(m)
+    if request.args.get('sel') == 'fontanelle':  # bike_sosta
+        
+        zip = fontanelle
+
+        zipg = fontanelle
+   
+        a = 'fontanelle'
+        key='false'
+        
+        for _, row in fontanelle.iterrows():
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                icon=folium.map.Icon(color='green')
+            ).add_to(m)
 
         zipg = aree_velocita_lim
    
@@ -195,7 +229,11 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
+
     ps = percorsi_superficie.to_html()
+
+    ps = fontanelle.to_html()
+
 
     return render_template('test.html', table=ps)
 

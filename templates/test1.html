@@ -1,35 +1,80 @@
+<script>
+  navigator.geolocation.getCurrentPosition(showPosition, showError);
 
-<html>
-    <head>
-    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"type="text/javascript" charset="utf-8"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"type="text/javascript" charset="utf-8"></script>
-    </head>
-    <body style='margin: 0'>
-    <div style="width: 100vw; height: 100vh" id="mapContainer"></div>
-    <script>
-      // Initialize the platform object:
-      var platform = new H.service.Platform({
-      'apikey': '{{apikey}}'
-      });
+
+  function getLocation() {
+
+    if (navigator.geolocation) {
+
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+    } else {
+
+      alert("Geolocation is not supported by this browser.");
+
+    }
+
+  }
+
+
+  function showPosition(position) {
+    
+    //console.log(position.coords.latitude, position.coords.longitude);
+
+    //console.log(`acc ${position.coords.accuracy}m`);
+    //options['lat'] = position.coords.latitude;
+
+    //options['lng'] = position.coords.longitude;
+
+
+    a = position.coords.latitude;
+
+    b = position.coords.longitude;
+
+    document.getElementById('pino').innerHTML = a;
+
+    
+
+  }
+
+
+  function showError(error) {
+
+
+    switch (error.code) {
+
+      case error.PERMISSION_DENIED:
+
+        alert("User denied the request for Geolocation.");
+
+        break;
+
+      case error.POSITION_UNAVAILABLE:
+
+        alert("Location information is unavailable.");
+
+        break;
+
+      case error.TIMEOUT:
+
+        alert("The request to get user location timed out.");
+
+        break;
+
+      case error.UNKNOWN_ERROR:
+
+        alert("An unknown error occurred.");
+
+        break;
+
+    };
+  };
+</script>
+
+<body>
   
-      const lng = {longitude};
-      const lat = latitude;
-     
-  // Obtain the default map types from the platform object   
-      var defaultLayers = platform.createDefaultLayers();
+  <form action="/fanculo" method="get">
+    <p id="pippo"></p>
+  </form>
   
-  // Instantiate (and display) a map object:
-      var map = new H.Map(
-      document.getElementById('mapContainer'),
-      defaultLayers.vector.normal.map,
-      {
-        zoom: 10,
-        center: { lat: lat, lng: lng }
-      });
-      
-      const marker = new H.map.Marker({lat: lat, lng: lng});
-      map.addObject(marker);
-    </script>
-    </body>
-</html>
+</body>

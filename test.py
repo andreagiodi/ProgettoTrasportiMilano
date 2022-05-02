@@ -1,20 +1,18 @@
-from flask import Flask, jsonify
-from flask_simple_geoip import SimpleGeoIP
-
+#https://www.codespeedy.com/how-to-pass-javascript-variables-to-python-in-flask/
+from flask import Flask, render_template, send_file, make_response, url_for, Response, request
 
 app = Flask(__name__)
 
-# The API key is obtained from the GEOIPIFY_API_KEY environment variable.
-# Alternatively it can be set as follows:
-# app.config.update(GEOIPIFY_API_KEY='YOUR_API_KEY')
-
-# Initialize the extension
-simple_geoip = SimpleGeoIP(app)
-
+global value1
+value1 = ''
+global value2
 
 @app.route('/')
 def test():
-    # Retrieve geoip data for the given requester
-    geoip_data = simple_geoip.get_geoip_data()
+    
+    print(value1)
+    return render_template('test1.html', value1=value1)
 
-    return jsonify(data=geoip_data)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=3245, debug=True)
