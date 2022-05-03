@@ -124,7 +124,7 @@ def resultdrop():
         # seconda pagina
     if request.args.get('sel') == 'aree_velocita':  # aree_velocita
         
-        zip = aree_velocita_lim['nome_via'].sort_values(by=['nome_via'])
+        zip = aree_velocita_lim['nome_via'].sort_values()
 
         zipg = aree_velocita_lim
    
@@ -168,7 +168,7 @@ def resultdrop():
             ).add_to(m)
     if request.args.get('sel') == 'parcheggi_pubblici':  # parcheggi_pubblici
         
-        zip = parcheggi_pubblici['indirizzo'].sort_values(by=['indirizzo'])
+        zip = parcheggi_pubblici['indirizzo'].sort_values()
 
         zipg = parcheggi_pubblici
    
