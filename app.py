@@ -103,7 +103,7 @@ def index():
 
 @app.route('/resultdrop', methods=['GET'])
 def resultdrop():
-
+    #primo risultato dopo la selezione della categoria nel dropdown
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     if request.args.get('sel') == 'area_sosta':  # AREA_SOSTA
