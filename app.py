@@ -64,6 +64,7 @@ parcheggi_pubblici = parcheggi_pubblici.to_crs(4326)
 parcheggi_pubblici['lon'] = parcheggi_pubblici['geometry'].x
 parcheggi_pubblici['lat'] = parcheggi_pubblici['geometry'].y
 
+
 @app.route('/test1', methods=['GET'])
 def test():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='CartoDB positron')
