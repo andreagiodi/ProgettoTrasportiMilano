@@ -181,6 +181,31 @@ def resultdrop():
                 popup=row['indirizzo'],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
+    if request.args.get('sel') == 'pedoni_ztl':  # parcheggi_pubblici
+        
+        zip = pedoni_ztl['nome'].sort_values()
+
+        zipg = pedoni_ztl
+
+        zip1 = pedoni_ztl[pedoni_ztl['tipo'] == 'AREA_B']
+        zip2 = pedoni_ztl[pedoni_ztl['tipo'] == 'AREA_C']
+
+        a = 'pedoni_ztl'
+        key='true'
+
+        for _, r in zip1.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'yellow', 'color' : 'yellow'})
+            folium.Popup(r['nome']).add_to(geo_j)
+            geo_j.add_to(m)
+        for _, r in zip2.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'red', 'color' : 'red'})
+            folium.Popup(r['nome']).add_to(geo_j)
+            geo_j.add_to(m)
+        
 
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
@@ -239,9 +264,9 @@ def testresult():
 @app.route('/test', methods=['GET'])
 def test1():
 
-    ps = parcheggi_pubblici.to_html()
+    ps = pedoni_ztl.to_html()
 
-    ps = parcheggi_pubblici.to_html()
+    ps = pedoni_ztl.to_html()
 
 
     return render_template('test.html', table=ps)
