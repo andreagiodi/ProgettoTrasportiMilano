@@ -191,7 +191,7 @@ def resultdrop():
         zip2 = pedoni_ztl[pedoni_ztl['tipo'] == 'AREA_C']
 
         a = 'pedoni_ztl'
-        key='true'
+        key='false'
 
         for _, r in zip1.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
@@ -224,6 +224,7 @@ def resultdrop1():
             popup=value1['AREA_SOSTA'].values[0],
             icon=folium.map.Icon(color='green')
         ).add_to(m)
+        
     if a == 'aree_velocita_lim':
         value1 = zipg[zipg.nome_via == value]
         sim_geo = gpd.GeoSeries(value1['geometry']).simplify(tolerance=0.001)
