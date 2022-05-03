@@ -60,6 +60,9 @@ bike_sosta['lat'] = bike_sosta['geometry'].y
 bike_sosta.dropna(inplace=True)
 fontanelle['lon'] = fontanelle['geometry'].x
 fontanelle['lat'] = fontanelle['geometry'].y
+parcheggi_pubblici = parcheggi_pubblici.to_crs(4326)
+parcheggi_pubblici['lon'] = parcheggi_pubblici['geometry'].x
+parcheggi_pubblici['lat'] = parcheggi_pubblici['geometry'].y
 
 @app.route('/test1', methods=['GET'])
 def test():
@@ -104,7 +107,7 @@ def resultdrop():
     m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     if request.args.get('sel') == 'area_sosta':  # AREA_SOSTA
         global zip
-        zip = area_sosta_car_sharing['AREA_SOSTA']
+        zip = area_sosta_car_sharing['AREA_SOSTA'].sort_values()
         global zipg
         zipg = area_sosta_car_sharing
         global a
@@ -121,7 +124,7 @@ def resultdrop():
         # seconda pagina
     if request.args.get('sel') == 'aree_velocita':  # aree_velocita
         
-        zip = aree_velocita_lim['nome_via']
+        zip = aree_velocita_lim['nome_via'].sort_values(by=['nome_via'])
 
         zipg = aree_velocita_lim
    
@@ -163,6 +166,21 @@ def resultdrop():
                 location=[row["lat"], row["lon"]],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
+    if request.args.get('sel') == 'parcheggi_pubblici':  # parcheggi_pubblici
+        
+        zip = parcheggi_pubblici['indirizzo'].sort_values(by=['indirizzo'])
+
+        zipg = parcheggi_pubblici
+   
+        a = 'parcheggi_pubblici'
+        key='true'
+        
+        for _, row in parcheggi_pubblici.iterrows():
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=row['indirizzo'],
+                icon=folium.map.Icon(color='green')
+            ).add_to(m)
 
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
@@ -188,6 +206,13 @@ def resultdrop1():
         geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
         folium.Popup(value1['nome_via'].values[0]).add_to(geo_j)
         geo_j.add_to(m)
+    if a == 'parcheggi_pubblici':
+        value1 = zipg[zipg.indirizzo == value].sort_values(by='indirizzo')
+        folium.Marker(
+            location=[value1["lat"], value1["lon"]],
+            popup=value1['indirizzo'].values[0],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m)
     #m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     
     return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip)
@@ -214,9 +239,9 @@ def testresult():
 @app.route('/test', methods=['GET'])
 def test1():
 
-    ps = percorsi_superficie.to_html()
+    ps = parcheggi_pubblici.to_html()
 
-    ps = fontanelle.to_html()
+    ps = parcheggi_pubblici.to_html()
 
 
     return render_template('test.html', table=ps)
