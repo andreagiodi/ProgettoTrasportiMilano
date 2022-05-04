@@ -1,10 +1,10 @@
 #https://www.codespeedy.com/how-to-pass-javascript-variables-to-python-in-flask/
-from flask import Flask, render_template, send_file, make_response, url_for, Response, request
+from flask import Flask, render_template, send_file, make_response, url_for, Response, request, jsonify
 import json
 app = Flask(__name__)
 
 @app.route('/')
-def test():
+def testt():
     
     return render_template('test1.html')
 

@@ -206,6 +206,23 @@ def resultdrop():
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'red', 'color' : 'red'})
             folium.Popup(r['nome']).add_to(geo_j)
             geo_j.add_to(m)
+    if request.args.get('sel') == 'piste_ciclabili':  # piste_ciclabili DA FINIRE
+        
+        zip = piste_ciclabili['anagrafica'].sort_values()
+
+        zipg = piste_ciclabili
+
+
+        a = 'piste_ciclabili'
+        key='false'
+
+        
+        for _, r in piste_ciclabili.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            folium.Popup(r['anagrafica']).add_to(geo_j)
+            geo_j.add_to(m)
         
 
 
@@ -266,9 +283,9 @@ def testresult():
 @app.route('/test', methods=['GET'])
 def test1():
 
-    ps = pedoni_ztl.to_html()
+    ps = piste_ciclabili.to_html()
 
-    ps = pedoni_ztl.to_html()
+    ps = piste_ciclabili.to_html()
 
 
     return render_template('test.html', table=ps)
