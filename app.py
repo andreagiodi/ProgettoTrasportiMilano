@@ -5,13 +5,14 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import folium
 import contextily
 import geopandas as gpd
+import pygeos
 import pandas as pd
 import io
 from flask import Flask, render_template, send_file, make_response, url_for, Response, request
 app = Flask(__name__)
 
 
-# pip install flask geopandas pandas contextily matplotlib folium
+# pip install flask geopandas pandas contextily matplotlib folium pygeos
 
 matplotlib.use('Agg')
 
@@ -63,7 +64,7 @@ fontanelle['lat'] = fontanelle['geometry'].y
 parcheggi_pubblici = parcheggi_pubblici.to_crs(4326)
 parcheggi_pubblici['lon'] = parcheggi_pubblici['geometry'].x
 parcheggi_pubblici['lat'] = parcheggi_pubblici['geometry'].y
-
+piste_ciclabili = gpd.overlay(piste_ciclabili, piste_ciclabili, how='union').sort_values(ascending=True, by='anagrafica_1')
 
 @app.route('/test1', methods=['GET'])
 def test():
@@ -208,20 +209,20 @@ def resultdrop():
             geo_j.add_to(m)
     if request.args.get('sel') == 'piste_ciclabili':  # piste_ciclabili DA FINIRE
         
-        zip = piste_ciclabili['anagrafica'].sort_values()
+        zip = piste_ciclabili['anagrafica_1'].sort_values()
 
         zipg = piste_ciclabili
 
 
         a = 'piste_ciclabili'
-        key='false'
+        key='true'
 
         
         for _, r in piste_ciclabili.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
-            folium.Popup(r['anagrafica']).add_to(geo_j)
+            folium.Popup(r['anagrafica_1']).add_to(geo_j)
             geo_j.add_to(m)
         
 
@@ -257,6 +258,13 @@ def resultdrop1():
             popup=value1['indirizzo'].values[0],
             icon=folium.map.Icon(color='green')
         ).add_to(m)
+        if a == 'piste_ciclabili':
+            value1 = zipg[zipg.anagrafica_1 == value]
+            sim_geo = gpd.GeoSeries(value1['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            folium.Popup(value1['anagrafica_1'].values[0]).add_to(geo_j)
+            geo_j.add_to(m)
     #m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     
     return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip)
@@ -282,10 +290,12 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
+    u = piste_ciclabili
+    u1 = gpd.overlay(u, u, how='union').sort_values(ascending=True, by='anagrafica_1')
+    
+    ps = u1.to_html()
 
-    ps = piste_ciclabili.to_html()
-
-    ps = piste_ciclabili.to_html()
+    ps = u1.to_html()
 
 
     return render_template('test.html', table=ps)
