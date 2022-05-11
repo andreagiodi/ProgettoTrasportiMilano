@@ -68,9 +68,14 @@ piste_ciclabili = gpd.overlay(piste_ciclabili, piste_ciclabili, how='union').sor
 fermate_metro = fermate_metro.to_crs(4326)
 fermate_metro['lon'] = fermate_metro['geometry'].x
 fermate_metro['lat'] = fermate_metro['geometry'].y
-fermate_superficie = fermate_superficie.set_crs(4326)
+fermate_superficie = fermate_superficie.to_crs(4326)
 fermate_superficie['lon'] = fermate_superficie['geometry'].x
 fermate_superficie['lat'] = fermate_superficie['geometry'].y
+sosta_turistici = sosta_turistici.to_crs(4326)
+sosta_turistici['lon'] = sosta_turistici['geometry'].x
+sosta_turistici['lat'] = sosta_turistici['geometry'].y
+percorsi_superficie = percorsi_superficie.drop_duplicates(subset=['linea']).dropna(subset=['linea']).sort_values(by='linea')
+
 
 @app.route('/test1', methods=['GET'])
 def test():
@@ -259,28 +264,45 @@ def resultdrop():
 
     if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie 
         
-        zip = percorsi_superficie['nome'].sort_values()
+        zip = percorsi_superficie["linea"].sort_values()
 
         zipg = percorsi_superficie
 
 
         a = 'percorsi_superficie'
-        key='false'
+        key='true'
 
         
-        for _, row in fermate_superficie.iterrows():
-            folium.Marker(
-                location=[row["lat"], row["lon"]],
-                popup=row['ubicazione'],
-                icon=folium.map.Icon(color='green')
-            ).add_to(m)
+        # for _, row in fermate_superficie.iterrows():
+        #     folium.Marker(
+        #         location=[row["lat"], row["lon"]],
+        #         popup=row['ubicazione'],
+        #         icon=folium.map.Icon(color='green')
+        #     ).add_to(m)
         for _, r in percorsi_superficie.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001) 
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['linea']).add_to(geo_j)
             geo_j.add_to(m)
+
+    if request.args.get('sel') == 'sosta_turistici':  # percorsi_superficie 
         
+        zip = sosta_turistici['localizzaz'].sort_values()
+
+        zipg = sosta_turistici
+
+
+        a = 'sosta_turistici'
+        key='true'
+
+        
+        for _, row in sosta_turistici.iterrows():
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=row['localizzaz'],
+                icon=folium.map.Icon(color='green')
+            ).add_to(m)   
 
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
@@ -314,7 +336,22 @@ def resultdrop1():
             popup=value1['indirizzo'].values[0],
             icon=folium.map.Icon(color='green')
         ).add_to(m)
-    
+    if a == 'sosta_turistici':
+        value1 = zipg[zipg.localizzaz == value]
+        folium.Marker(
+            location=[value1["lat"], value1["lon"]],
+            popup=value1['localizzaz'].values[0],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m)
+    if a == 'percorsi_superficie':
+        value1 = zipg[zipg.linea == value]
+        for _, r in value1.iterrows():
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001) 
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            folium.Popup(r['linea']).add_to(geo_j)
+            geo_j.add_to(m)
+        
         
     
     #m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
