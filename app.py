@@ -74,7 +74,9 @@ fermate_superficie['lat'] = fermate_superficie['geometry'].y
 sosta_turistici = sosta_turistici.to_crs(4326)
 sosta_turistici['lon'] = sosta_turistici['geometry'].x
 sosta_turistici['lat'] = sosta_turistici['geometry'].y
-percorsi_superficie = percorsi_superficie.drop_duplicates(subset=['linea']).dropna(subset=['linea']).sort_values(by='linea')
+percorsi_superficie = percorsi_superficie.drop_duplicates(subset=['linea']).dropna(subset=['linea'])
+percorsi_superficie['linea'] = percorsi_superficie['linea'].astype(int).sort_values()
+
 
 
 @app.route('/test1', methods=['GET'])
@@ -262,9 +264,9 @@ def resultdrop():
             geo_j.add_to(m)
 
 
-    if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie 
+    if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie #fare return zip come int
         
-        zip = percorsi_superficie["linea"].sort_values()
+        zip = percorsi_superficie["linea"].astype(str)
 
         zipg = percorsi_superficie
 
