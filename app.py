@@ -8,7 +8,7 @@ import geopandas as gpd
 import pygeos
 import pandas as pd
 import io
-from flask import Flask, render_template, send_file, make_response, url_for, Response, request
+from flask import Flask, render_template, send_file, make_response, url_for, Response, request, redirect
 app = Flask(__name__)
 
 
@@ -240,7 +240,7 @@ def resultdrop():
 
 
     if request.args.get('sel') == 'percorsi_metro':  # fermate_metro DA FINIRE
-        
+        return redirect("/metro")
         zip = fermate_metro['nome'].sort_values()
 
         zipg = fermate_metro
@@ -249,17 +249,18 @@ def resultdrop():
         a = 'fermate_metro'
         key='false'
 
-        
-        for _, row in fermate_metro.iterrows():
+        fermate_metro1 = fermate_metro[fermate_metro.linee=='1']
+        for _, row in fermate_metro1.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],
                 popup=row['nome'],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
-        for _, r in percorsi_metro.iterrows():
+        percorsi_metro1 = percorsi_metro[percorsi_metro.linea=='1']
+        for _, r in percorsi_metro1.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
             geo_j = sim_geo.to_json()
-            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'red', 'color' : 'red'})
             folium.Popup(r['linea']).add_to(geo_j)
             geo_j.add_to(m)
 
@@ -309,6 +310,32 @@ def resultdrop():
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
 
+@app.route('/metro', methods=['GET'])
+def metro():
+    zip = fermate_metro['nome'].sort_values()
+
+    zipg = fermate_metro
+
+
+    a = 'fermate_metro'
+    key='false'
+
+    fermate_metro1 = fermate_metro[fermate_metro.linee=='1']
+    for _, row in fermate_metro1.iterrows():
+        folium.Marker(
+            location=[row["lat"], row["lon"]],
+            popup=row['nome'],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m)
+    percorsi_metro1 = percorsi_metro[percorsi_metro.linea=='1']
+    for _, r in percorsi_metro1.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'red', 'color' : 'red'})
+        folium.Popup(r['linea']).add_to(geo_j)
+        geo_j.add_to(m)
+
+    return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
 
 @app.route('/resultdrop1', methods=['GET'])
 def resultdrop1():
@@ -380,7 +407,7 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
-    ps = fermate_superficie
+    ps = fermate_metro
     ps = ps.to_html()
 
     return render_template('test.html', table=ps)
