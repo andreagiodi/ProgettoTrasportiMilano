@@ -312,6 +312,10 @@ def resultdrop():
 
 @app.route('/metro', methods=['GET'])
 def metro():
+    m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
+    m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
+    m2 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
+    m3 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     zip = fermate_metro['nome'].sort_values()
 
     zipg = fermate_metro
@@ -335,7 +339,55 @@ def metro():
         folium.Popup(r['linea']).add_to(geo_j)
         geo_j.add_to(m)
 
-    return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
+
+    fermate_metro2 = fermate_metro[fermate_metro.linee=='2']
+    for _, row in fermate_metro2.iterrows():
+        folium.Marker(
+            location=[row["lat"], row["lon"]],
+            popup=row['nome'],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m1)
+    percorsi_metro2 = percorsi_metro[percorsi_metro.linea=='2']
+    for _, r in percorsi_metro2.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'green', 'color' : 'green'})
+        folium.Popup(r['linea']).add_to(geo_j)
+        geo_j.add_to(m1)
+
+
+    fermate_metro3 = fermate_metro[fermate_metro.linee=='3']
+    for _, row in fermate_metro3.iterrows():
+        folium.Marker(
+            location=[row["lat"], row["lon"]],
+            popup=row['nome'],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m2)
+    percorsi_metro3 = percorsi_metro[percorsi_metro.linea=='3']
+    for _, r in percorsi_metro3.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'yellow', 'color' : 'yellow'})
+        folium.Popup(r['linea']).add_to(geo_j)
+        geo_j.add_to(m2)
+
+
+    fermate_metro5 = fermate_metro[fermate_metro.linee=='5']
+    for _, row in fermate_metro5.iterrows():
+        folium.Marker(
+            location=[row["lat"], row["lon"]],
+            popup=row['nome'],
+            icon=folium.map.Icon(color='green')
+        ).add_to(m3)
+    percorsi_metro5 = percorsi_metro[percorsi_metro.linea=='5']
+    for _, r in percorsi_metro5.iterrows():
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'purple', 'color' : 'purple'})
+        folium.Popup(r['linea']).add_to(geo_j)
+        geo_j.add_to(m3)
+
+    return render_template('indexmetro.html', map=m._repr_html_(), map2=m1._repr_html_(), map3=m2._repr_html_(), map4=m3._repr_html_(),key=key ,zip=zip)
 
 @app.route('/resultdrop1', methods=['GET'])
 def resultdrop1():

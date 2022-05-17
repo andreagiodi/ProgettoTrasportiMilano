@@ -3,12 +3,19 @@ th {
     padding: 3px;
 }
 
-nav {
+/* nav {
     background-color: aqua;
-}
+} */
 
 /* #map {
     display: flex;
     align-items: center;
     justify-content: center;
 }*/
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
