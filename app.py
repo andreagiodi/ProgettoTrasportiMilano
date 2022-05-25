@@ -114,7 +114,7 @@ def index():
         folium.Popup(r['NIL']).add_to(geo_j)
         geo_j.add_to(m)
 
-    return render_template('index2.html', map=m._repr_html_())
+    return render_template('index2.html', map=m._repr_html_(), title='Trasporti Milano')
 
 
 @app.route('/resultdrop', methods=['GET'])
@@ -128,8 +128,10 @@ def resultdrop():
         global zipg
         zipg = area_sosta_car_sharing
         global a
+        global title
         a = 'area_sosta_car_sharing'
         key='true'
+        title='Aree Di Sosta(Car Sharing)'
         #popup1 = zip.values[0]
         # prima pagina
         for _, row in area_sosta_car_sharing.iterrows():
@@ -147,7 +149,7 @@ def resultdrop():
    
         a = 'aree_velocita_lim'
         key='true'
-        
+        title='Aree Con Velocità Limitata'
         for _, r in aree_velocita_lim.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
@@ -162,7 +164,7 @@ def resultdrop():
    
         a = 'bike_sosta'
         key='false'
-        
+        title='Aree Di Sosta Per Biciclette'
         for _, row in bike_sosta.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],
@@ -177,7 +179,7 @@ def resultdrop():
    
         a = 'fontanelle'
         key='false'
-        
+        title='Fontanelle'
         for _, row in fontanelle.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],
@@ -191,7 +193,7 @@ def resultdrop():
    
         a = 'parcheggi_pubblici'
         key='true'
-        
+        title='Parcheggi Pubblici'
         for _, row in parcheggi_pubblici.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],
@@ -209,7 +211,7 @@ def resultdrop():
 
         a = 'pedoni_ztl'
         key='false'
-
+        title='Zone A Traffico Limitato'
         for _, r in zip1.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
@@ -231,7 +233,7 @@ def resultdrop():
 
         a = 'piste_ciclabili'
         key='false'
-
+        title='Piste Ciclabili'
         
         for _, r in piste_ciclabili.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
@@ -250,7 +252,7 @@ def resultdrop():
 
         a = 'fermate_metro'
         key='false'
-
+        
         fermate_metro1 = fermate_metro[fermate_metro.linee=='1']
         for _, row in fermate_metro1.iterrows():
             folium.Marker(
@@ -277,7 +279,7 @@ def resultdrop():
         a = 'percorsi_superficie'
         key='true'
 
-        
+        title='Linee e Mezzi Di Superficie'
         # for _, row in fermate_superficie.iterrows():
         #     folium.Marker(
         #         location=[row["lat"], row["lon"]],
@@ -300,7 +302,7 @@ def resultdrop():
 
         a = 'sosta_turistici'
         key='true'
-
+        title='Aree Di Sosta(Bus Turistici)'
         
         for _, row in sosta_turistici.iterrows():
             folium.Marker(
@@ -310,7 +312,7 @@ def resultdrop():
             ).add_to(m)   
 
 
-    return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip)
+    return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip, title=title)
 
 @app.route('/metro', methods=['GET'])
 def metro():
@@ -439,7 +441,7 @@ def resultdrop1():
     
     #m1 = folium.Map(location=[45.46220047218434, 9.191121737490482], zoom_start=12, tiles='openstreetmap')
     
-    return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip)
+    return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip,title=title)
 
 
 @app.route('/testresult', methods=['GET'])
