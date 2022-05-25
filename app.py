@@ -17,6 +17,7 @@ app = Flask(__name__)
 matplotlib.use('Agg')
 
 
+
 quartieri = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/quartieri_milano.zip')
 area_sosta_car_sharing = gpd.read_file(
