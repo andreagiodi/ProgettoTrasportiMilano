@@ -209,7 +209,7 @@
                     
 
                     <form action="/resultdrop" method="get">
-                        <div class="dropdown dropdown" style="width: 240px;">
+                        <div class="dropdown dropdown" style="width: 400px;">
                             <select name="sel" id='sel' method="GET" class="dropdown-select">
                                 <option value="area_sosta" SELECTED>Aree Di Sosta Car Sharing</option>
                                 <option value="aree_velocita" SELECTED>Aree Velocità Limitata</option>
@@ -231,7 +231,7 @@
 
                     {% if key == 'true' %}
                     <form action="/resultdrop1" method="get">
-                        <div class="dropdown dropdown" style="width: 240px;">
+                        <div class="dropdown dropdown" style="width: 400px;">
                             <select name="sel1" id='sel1' method="GET" class="dropdown-select">
                                 {% for i in zip%}
                                 <option value="{{i}}" SELECTED>{{i}}</option>
