@@ -131,7 +131,7 @@ def resultdrop():
         global title
         a = 'area_sosta_car_sharing'
         key='true'
-        title='Aree Di Sosta(Car Sharing)'
+        title='Aree Di Sosta (Car Sharing)'
         #popup1 = zip.values[0]
         # prima pagina
         for _, row in area_sosta_car_sharing.iterrows():
