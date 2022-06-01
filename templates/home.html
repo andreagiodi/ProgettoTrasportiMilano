@@ -1,203 +1,331 @@
-<html lang="en"><head>
 
-    <meta charset="UTF-8">
-    
-  <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
-  <meta name="apple-mobile-web-app-title" content="CodePen">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <title>Trasporti Milano</title>
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4490/4490838.png">
+  <link rel="stylesheet" media="screen" href="https://cpwebassets.codepen.io/assets/fullpage/fullpage-1580f96ce81ff0a427cf57dda2748ce646c38efc201ae5942a29958cffa6856d.css" />
   
-  <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
   
-  <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
-  
-  
-    <title>Trasporti Milano</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  
-    <link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/183516/gilroy-webfont.css">
-    
+
+
+  <title>Transporti Milano</title>
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
   <style>
-  body {
-    font-family: "Gilroy ExtraBold", system-ui, sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    -webkit-font-smoothing: antialiased;
-    
-    -webkit-text-size-adjust: 100%;
-  }
-  
-  html,
-  body {
-    width: 100vw;
-    height: 100vh;
-  }
-  
-  body {
-    background: linear-gradient(45deg, #001c58, #118bbb);
-    transform-style: preserve-3d;
-    transform: perspective(60rem);
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .Menu-list {
-    font-size: 4.25rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: rotateX(-10deg) rotateY(20deg);
-  }
-  
-  .Menu-list-item {
-    position: relative;
-    color: transparent;
-    cursor: pointer;
-  }
-  .Menu-list-item::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 49%;
-    left: -10%;
-    right: -10%;
-    height: 4px;
-    border-radius: 4px;
-    margin-top: -2px;
-    background: #1884cc;
-    transform: scale(0);
-    transition: transform 0.8s cubic-bezier(0.16, 1.08, 0.38, 0.98);
-    z-index: 1;
-  }
-  
-  .Mask {
-    display: block;
-    position: absolute;
-    overflow: hidden;
-    color: #21a4e0;
-    top: 0;
-    height: 49%;
-    transition: all 0.8s cubic-bezier(0.16, 1.08, 0.38, 0.98);
-  }
-  .Mask span {
-    display: block;
-  }
-  
-  .Mask + .Mask {
-    top: 48.9%;
-    height: 51.1%;
-  }
-  .Mask + .Mask span {
-    transform: translateY(-49%);
-  }
-  
-  .Menu-list-item:hover .Mask,
-  .Menu-list-item:active .Mask {
-    color: #FFF;
-    transform: skewX(12deg) translateX(5px);
-  }
-  .Menu-list-item:hover .Mask + .Mask,
-  .Menu-list-item:active .Mask + .Mask {
-    transform: skewX(12deg) translateX(-5px);
-  }
-  .Menu-list-item:hover::before,
-  .Menu-list-item:active::before {
-    transform: scale(1);
-  }
+    html { font-size: 15px; }
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+    body { height:100%; display: flex; flex-direction: column; }
+    .referer-warning {
+      background: black;
+      box-shadow: 0 2px 5px rgba(0,0,0, 0.5);
+      padding: 0.75em;
+      color: white;
+      text-align: center;
+      font-family: var(--cp-font-family);
+      line-height: 1.2;
+      font-size: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .referer-warning h1 { font-size: 1.2rem; margin: 0; }
+    .referer-warning a { color: #56bcf9; } /* $linkColorOnBlack */
   </style>
+</head>
+
+<body class="">
   
-    <script>
-    window.console = window.console || function(t) {};
-  </script>
+
+  <div id="result-iframe-wrap" role="main">
+
+    <iframe
+      id="result"
+      srcdoc="
+<!DOCTYPE html>
+<html lang=&quot;en&quot; >
+
+<head>
+
+  <meta charset=&quot;UTF-8&quot;>
   
-    
-    
-    <script>
-    if (document.location.search.match(/type=embed/gi)) {
-      window.parent.postMessage("resize", "*");
-    }
-  </script>
-  
-  
-  </head>
-  
-  <h1 class="Menu-list" data-offset="10" style="font-size:100px; color:#1884cc; margin:10px; transform: translate3d(0px, 2.02083px, 0px) rotateX(-3.36009deg) rotateY(-4.04167deg);">Trasporti Milano</h1>
 
 
-  <body translate="no">
-    <!-- @NOTE: the onclicks are used for touch devices since I'm lazy and didnt use <a> tags -->
-  <div class="Menu">
-    
-    <ul class="Menu-list" data-offset="10" style="transform: translate3d(0px, 2.02083px, 0px) rotateX(-3.36009deg) rotateY(-4.04167deg);">
-      <li class="Menu-list-item" data-offset="20" onclick="location.href = '/home';" style="transform: translate3d(-4.04167px, 6.72018px, 20px);">
-        VAI AL SITO
-        <span class="Mask"><span>VAI AL SITO</span></span>
-        <span class="Mask"><span>VAI AL SITO</span></span>
-      </li>
-      <li class="Menu-list-item" data-offset="16" onclick="" style="transform: translate3d(-3.23333px, 5.37615px, 20px);">
-        About
-        <span class="Mask"><span>About</span></span>
-        <span class="Mask"><span>About</span></span>
-      </li>
-      <li class="Menu-list-item" data-offset="12" onclick=""  style="transform: translate3d(-2.425px, 4.03211px, 20px);">
-        Work
-        <span class="Mask"><span>Work</span></span>
-        <span class="Mask"><span>Work</span></span>
-      </li>
-      <li class="Menu-list-item" data-offset="8" onclick="" style="transform: translate3d(-1.61667px, 2.68807px, 20px);">
-        Contact
-        <span class="Mask"><span>Contact</span></span>
-        <span class="Mask"><span>Contact</span></span>
-      </li>
-    </ul>
+  <title>Trasporti Milano</title>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css&quot;>
+
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Playfair+Display:700|Raleway:500.700'>
+  
+<style>
+body {
+  margin: 40px 0;
+  font-family: &quot;Raleway&quot;;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #BCAAA4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.title {
+  font-family: &quot;Raleway&quot;;
+  font-size: 24px;
+  font-weight: 700;
+  color: #5D4037;
+  text-align: center;
+}
+
+p {
+  line-height: 1.5em;
+}
+
+h1 + p, p + p {
+  margin-top: 10px;
+}
+
+.container {
+  padding: 40px 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-wrap {
+  margin: 10px;
+  transform: perspective(800px);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+.card-wrap:hover .card-info {
+  transform: translateY(0);
+}
+.card-wrap:hover .card-info p {
+  opacity: 1;
+}
+.card-wrap:hover .card-info, .card-wrap:hover .card-info p {
+  transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.card-wrap:hover .card-info:after {
+  transition: 5s cubic-bezier(0.23, 1, 0.32, 1);
+  opacity: 1;
+  transform: translateY(0);
+}
+.card-wrap:hover .card-bg {
+  transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 5s cubic-bezier(0.23, 1, 0.32, 1);
+  opacity: 0.8;
+}
+.card-wrap:hover .card {
+  transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 2s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: rgba(255, 255, 255, 0.2) 0 0 40px 5px, white 0 0 0 1px, rgba(0, 0, 0, 0.66) 0 30px 60px 0, inset #333 0 0 0 5px, inset white 0 0 0 6px;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 240px;
+  width: 240px;
+  height: 320px;
+  background-color: #333;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.66) 0 30px 60px 0, inset #333 0 0 0 5px, inset rgba(255, 255, 255, 0.5) 0 0 0 6px;
+  transition: 1s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.card-bg {
+  opacity: 0.5;
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: 1s cubic-bezier(0.445, 0.05, 0.55, 0.95), opacity 5s 1s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  pointer-events: none;
+}
+
+.card-info {
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  transform: translateY(40%);
+  transition: 0.6s 1.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.card-info p {
+  opacity: 0;
+  text-shadow: black 0 2px 3px;
+  transition: 0.6s 1.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.card-info * {
+  position: relative;
+  z-index: 1;
+}
+.card-info:after {
+  content: &quot;&quot;;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+  background-blend-mode: overlay;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: 5s 1s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.card-info h1 {
+  font-family: &quot;Playfair Display&quot;;
+  font-size: 36px;
+  font-weight: 700;
+  text-shadow: rgba(0, 0, 0, 0.5) 0 10px 10px;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage(&quot;resize&quot;, &quot;*&quot;);
+  }
+</script>
+
+
+</head>
+<!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
+<body translate=&quot;no&quot; >
+  <h1 class=&quot;title&quot;>Trasporti Milano</h1>
+
+<div id=&quot;app&quot; class=&quot;container&quot;>
+  <card data-image=&quot;https://images.unsplash.com/photo-1479660656269-197ebb83b540?dpr=2&amp;auto=compress,format&amp;fit=crop&amp;w=1199&amp;h=798&amp;q=80&amp;cs=tinysrgb&amp;crop=&quot;>
+    <h1 slot=&quot;header&quot;>Test</h1>
+    <p slot=&quot;content&quot;>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+  </card>
+  <card data-image=&quot;https://images.unsplash.com/photo-1479659929431-4342107adfc1?dpr=2&amp;auto=compress,format&amp;fit=crop&amp;w=1199&amp;h=799&amp;q=80&amp;cs=tinysrgb&amp;crop=&quot;>
+    <h1 slot=&quot;header&quot;>Beaches</h1>
+    <p slot=&quot;content&quot;>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+  </card>
+  <card data-image=&quot;https://images.unsplash.com/photo-1479644025832-60dabb8be2a1?dpr=2&amp;auto=compress,format&amp;fit=crop&amp;w=1199&amp;h=799&amp;q=80&amp;cs=tinysrgb&amp;crop=&quot;>
+    <h1 slot=&quot;header&quot;>Trees</h1>
+    <p slot=&quot;content&quot;>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+  </card>
+  <card data-image=&quot;https://images.unsplash.com/photo-1479621051492-5a6f9bd9e51a?dpr=2&amp;auto=compress,format&amp;fit=crop&amp;w=1199&amp;h=811&amp;q=80&amp;cs=tinysrgb&amp;crop=&quot;>
+    <h1 slot=&quot;header&quot;>Lakes</h1>
+    <p slot=&quot;content&quot;>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+  </card>
+</div>
+    <script src=&quot;https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js&quot;></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.min.js'></script>
+      <script id=&quot;rendered-js&quot; >
+Vue.config.devtools = true;
+
+Vue.component('card', {
+  template: `
+    <div class=&quot;card-wrap&quot;
+      @mousemove=&quot;handleMouseMove&quot;
+      @mouseenter=&quot;handleMouseEnter&quot;
+      @mouseleave=&quot;handleMouseLeave&quot;
+      ref=&quot;card&quot;>
+      <div class=&quot;card&quot;
+        :style=&quot;cardStyle&quot;>
+        <div class=&quot;card-bg&quot; :style=&quot;[cardBgTransform, cardBgImage]&quot;></div>
+        <div class=&quot;card-info&quot;>
+          <slot name=&quot;header&quot;></slot>
+          <slot name=&quot;content&quot;></slot>
+        </div>
+      </div>
+    </div>`,
+  mounted() {
+    this.width = this.$refs.card.offsetWidth;
+    this.height = this.$refs.card.offsetHeight;
+  },
+  props: ['dataImage'],
+  data: () => ({
+    width: 0,
+    height: 0,
+    mouseX: 0,
+    mouseY: 0,
+    mouseLeaveDelay: null }),
+
+  computed: {
+    mousePX() {
+      return this.mouseX / this.width;
+    },
+    mousePY() {
+      return this.mouseY / this.height;
+    },
+    cardStyle() {
+      const rX = this.mousePX * 30;
+      const rY = this.mousePY * -30;
+      return {
+        transform: `rotateY(${rX}deg) rotateX(${rY}deg)` };
+
+    },
+    cardBgTransform() {
+      const tX = this.mousePX * -40;
+      const tY = this.mousePY * -40;
+      return {
+        transform: `translateX(${tX}px) translateY(${tY}px)` };
+
+    },
+    cardBgImage() {
+      return {
+        backgroundImage: `url(${this.dataImage})` };
+
+    } },
+
+  methods: {
+    handleMouseMove(e) {
+      this.mouseX = e.pageX - this.$refs.card.offsetLeft - this.width / 2;
+      this.mouseY = e.pageY - this.$refs.card.offsetTop - this.height / 2;
+    },
+    handleMouseEnter() {
+      clearTimeout(this.mouseLeaveDelay);
+    },
+    handleMouseLeave() {
+      this.mouseLeaveDelay = setTimeout(() => {
+        this.mouseX = 0;
+        this.mouseY = 0;
+      }, 1000);
+    } } });
+
+
+
+const app = new Vue({
+  el: '#app' });
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
+"
+      sandbox="allow-forms allow-modals allow-pointer-lock allow-popups  allow-scripts allow-top-navigation-by-user-activation allow-downloads allow-presentation" allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share" allowTransparency="true"
+      allowpaymentrequest="true" allowfullscreen="true" class="result-iframe">
+      </iframe>
+
   </div>
-      <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script id="rendered-js">
-  var $menu = $('.Menu-list'),
-  $item = $('.Menu-list-item'),
-  w = $(window).width(), //window width
-  h = $(window).height(); //window height
-  
-  $(window).on('mousemove', function (e) {
-    var offsetX = 0.5 - e.pageX / w, //cursor position X
-    offsetY = 0.5 - e.pageY / h, //cursor position Y
-    dy = e.pageY - h / 2, //@h/2 = center of poster
-    dx = e.pageX - w / 2, //@w/2 = center of poster
-    theta = Math.atan2(dy, dx), //angle between cursor and center of poster in RAD
-    angle = theta * 180 / Math.PI - 90, //convert rad in degrees
-    offsetPoster = $menu.data('offset'),
-    transformPoster = 'translate3d(0, ' + -offsetX * offsetPoster + 'px, 0) rotateX(' + -offsetY * offsetPoster + 'deg) rotateY(' + offsetX * (offsetPoster * 2) + 'deg)'; //poster transform
-  
-    //get angle between 0-360
-    if (angle < 0) {
-      angle = angle + 360;
-    }
-  
-    //poster transform
-    $menu.css('transform', transformPoster);
-  
-    //parallax for each layer
-    $item.each(function () {
-      var $this = $(this),
-      offsetLayer = $this.data('offset') || 0,
-      transformLayer = 'translate3d(' + offsetX * offsetLayer + 'px, ' + offsetY * offsetLayer + 'px, 20px)';
-  
-      $this.css('transform', transformLayer);
-    });
-  });
-  //# sourceURL=pen.js
-      </script>
-  
-    
-  
-  
-  
-  
-   
-  </body></html>
+</body>
+</html>
