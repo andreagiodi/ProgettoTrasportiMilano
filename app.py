@@ -83,12 +83,6 @@ percorsi_superficie['linea'] = percorsi_superficie['linea'].astype(int).sort_val
 
 @app.route('/home', methods=['GET'])
 def home():
-    
-    return render_template('home.html')
-
-@app.route('/', methods=['GET'])
-def index():
-
     # folium mappa for per creare comune
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')  # CartoDB positron
     for _, r in quartieri_milano.iterrows():
@@ -99,6 +93,11 @@ def index():
         geo_j.add_to(m)
 
     return render_template('index2.html', map=m._repr_html_(), title='Trasporti Milano')
+
+@app.route('/', methods=['GET'])
+def index():
+
+    return render_template('home.html')
 
 
 @app.route('/resultdrop', methods=['GET'])
