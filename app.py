@@ -19,7 +19,7 @@ matplotlib.use('Agg')
 
 
 
-
+#importazione dataframes
 quartieri = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/quartieri_milano.zip')
 area_sosta_car_sharing = gpd.read_file(
@@ -81,27 +81,10 @@ percorsi_superficie = percorsi_superficie.drop_duplicates(subset=['linea']).drop
 percorsi_superficie['linea'] = percorsi_superficie['linea'].astype(int).sort_values()
 
 
-
-@app.route('/test1', methods=['GET'])
-def test():
-    m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='CartoDB positron')
-    for _, r in quartieri_milano.iterrows():
-
-        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
-        geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'gray'})
-        folium.Popup(r['NIL']).add_to(geo_j)
-        geo_j.add_to(m)
-    for _, r in piste_ciclabili.iterrows():
-
-        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
-        geo_j = sim_geo.to_json()
-        geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {
-                               'fillColor': 'black'})
-        folium.Popup(r['anagrafica']).add_to(geo_j)
-        geo_j.add_to(m)
-    return render_template('test.html', test=m._repr_html_())
-
+@app.route('/home', methods=['GET'])
+def home():
+    
+    return render_template('home.html')
 
 @app.route('/', methods=['GET'])
 def index():
@@ -270,9 +253,9 @@ def resultdrop():
             geo_j.add_to(m)
 
 
-    if request.args.get('sel') == 'percorsi_superficie':  # percorsi_superficie #fare return zip come int
+    if request.args.get('sel') == 'percorsi_superficie': 
         
-        zip = percorsi_superficie["linea"].astype(str)
+        zip = percorsi_superficie["linea"].sort_values().map(str)
 
         zipg = percorsi_superficie
 
@@ -281,14 +264,9 @@ def resultdrop():
         key='true'
 
         title='Linee e Mezzi Di Superficie'
-        # for _, row in fermate_superficie.iterrows():
-        #     folium.Marker(
-        #         location=[row["lat"], row["lon"]],
-        #         popup=row['ubicazione'],
-        #         icon=folium.map.Icon(color='green')
-        #     ).add_to(m)
+        percorsi_superficie['linea'] = percorsi_superficie['linea'].map(str)
         for _, r in percorsi_superficie.iterrows():
-            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001) 
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0001) 
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
             folium.Popup(r['linea']).add_to(geo_j)
@@ -435,7 +413,9 @@ def resultdrop1():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001) 
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'blue'})
+            
             folium.Popup(r['linea']).add_to(geo_j)
+            
             geo_j.add_to(m)
         
         
@@ -464,7 +444,7 @@ def testresult():
 
 @app.route('/test', methods=['GET'])
 def test1():
-    ps = fermate_metro
+    ps = bike_sosta
     ps = ps.to_html()
 
     return render_template('test.html', table=ps)

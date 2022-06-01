@@ -1,0 +1,203 @@
+<html lang="en"><head>
+
+    <meta charset="UTF-8">
+    
+  <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+  <meta name="apple-mobile-web-app-title" content="CodePen">
+  
+  <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+  
+  <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
+  
+  
+    <title>Trasporti Milano</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  
+    <link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/183516/gilroy-webfont.css">
+    
+  <style>
+  body {
+    font-family: "Gilroy ExtraBold", system-ui, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
+    
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  html,
+  body {
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  body {
+    background: linear-gradient(45deg, #001c58, #118bbb);
+    transform-style: preserve-3d;
+    transform: perspective(60rem);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .Menu-list {
+    font-size: 4.25rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: rotateX(-10deg) rotateY(20deg);
+  }
+  
+  .Menu-list-item {
+    position: relative;
+    color: transparent;
+    cursor: pointer;
+  }
+  .Menu-list-item::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 49%;
+    left: -10%;
+    right: -10%;
+    height: 4px;
+    border-radius: 4px;
+    margin-top: -2px;
+    background: #1884cc;
+    transform: scale(0);
+    transition: transform 0.8s cubic-bezier(0.16, 1.08, 0.38, 0.98);
+    z-index: 1;
+  }
+  
+  .Mask {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    color: #21a4e0;
+    top: 0;
+    height: 49%;
+    transition: all 0.8s cubic-bezier(0.16, 1.08, 0.38, 0.98);
+  }
+  .Mask span {
+    display: block;
+  }
+  
+  .Mask + .Mask {
+    top: 48.9%;
+    height: 51.1%;
+  }
+  .Mask + .Mask span {
+    transform: translateY(-49%);
+  }
+  
+  .Menu-list-item:hover .Mask,
+  .Menu-list-item:active .Mask {
+    color: #FFF;
+    transform: skewX(12deg) translateX(5px);
+  }
+  .Menu-list-item:hover .Mask + .Mask,
+  .Menu-list-item:active .Mask + .Mask {
+    transform: skewX(12deg) translateX(-5px);
+  }
+  .Menu-list-item:hover::before,
+  .Menu-list-item:active::before {
+    transform: scale(1);
+  }
+  </style>
+  
+    <script>
+    window.console = window.console || function(t) {};
+  </script>
+  
+    
+    
+    <script>
+    if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+    }
+  </script>
+  
+  
+  </head>
+  
+  <h1 class="Menu-list" data-offset="10" style="font-size:100px; color:#1884cc; margin:10px; transform: translate3d(0px, 2.02083px, 0px) rotateX(-3.36009deg) rotateY(-4.04167deg);">Trasporti Milano</h1>
+
+
+  <body translate="no">
+    <!-- @NOTE: the onclicks are used for touch devices since I'm lazy and didnt use <a> tags -->
+  <div class="Menu">
+    
+    <ul class="Menu-list" data-offset="10" style="transform: translate3d(0px, 2.02083px, 0px) rotateX(-3.36009deg) rotateY(-4.04167deg);">
+      <li class="Menu-list-item" data-offset="20" onclick="" style="transform: translate3d(-4.04167px, 6.72018px, 20px);">
+        VAI AL SITO
+        <span class="Mask"><span>VAI AL SITO</span></span>
+        <span class="Mask"><span>VAI AL SITO</span></span>
+      </li>
+      <li class="Menu-list-item" data-offset="16" onclick="" style="transform: translate3d(-3.23333px, 5.37615px, 20px);">
+        About
+        <span class="Mask"><span>About</span></span>
+        <span class="Mask"><span>About</span></span>
+      </li>
+      <li class="Menu-list-item" data-offset="12" onclick="" style="transform: translate3d(-2.425px, 4.03211px, 20px);">
+        Work
+        <span class="Mask"><span>Work</span></span>
+        <span class="Mask"><span>Work</span></span>
+      </li>
+      <li class="Menu-list-item" data-offset="8" onclick="" style="transform: translate3d(-1.61667px, 2.68807px, 20px);">
+        Contact
+        <span class="Mask"><span>Contact</span></span>
+        <span class="Mask"><span>Contact</span></span>
+      </li>
+    </ul>
+  </div>
+      <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script id="rendered-js">
+  var $menu = $('.Menu-list'),
+  $item = $('.Menu-list-item'),
+  w = $(window).width(), //window width
+  h = $(window).height(); //window height
+  
+  $(window).on('mousemove', function (e) {
+    var offsetX = 0.5 - e.pageX / w, //cursor position X
+    offsetY = 0.5 - e.pageY / h, //cursor position Y
+    dy = e.pageY - h / 2, //@h/2 = center of poster
+    dx = e.pageX - w / 2, //@w/2 = center of poster
+    theta = Math.atan2(dy, dx), //angle between cursor and center of poster in RAD
+    angle = theta * 180 / Math.PI - 90, //convert rad in degrees
+    offsetPoster = $menu.data('offset'),
+    transformPoster = 'translate3d(0, ' + -offsetX * offsetPoster + 'px, 0) rotateX(' + -offsetY * offsetPoster + 'deg) rotateY(' + offsetX * (offsetPoster * 2) + 'deg)'; //poster transform
+  
+    //get angle between 0-360
+    if (angle < 0) {
+      angle = angle + 360;
+    }
+  
+    //poster transform
+    $menu.css('transform', transformPoster);
+  
+    //parallax for each layer
+    $item.each(function () {
+      var $this = $(this),
+      offsetLayer = $this.data('offset') || 0,
+      transformLayer = 'translate3d(' + offsetX * offsetLayer + 'px, ' + offsetY * offsetLayer + 'px, 20px)';
+  
+      $this.css('transform', transformLayer);
+    });
+  });
+  //# sourceURL=pen.js
+      </script>
+  
+    
+  
+  
+  
+  
+   
+  </body></html>
