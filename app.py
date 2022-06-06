@@ -94,14 +94,14 @@ def home():
 
     return render_template('index2.html', map=m._repr_html_(), title='Trasporti Milano')
 
-
+#pagina accesso facilitato
 @app.route('/accessofacilitato', methods=['GET'])
 def accesso():
 
     return render_template('accessofacilitato.html')
 
 
-    
+#pagina home
 @app.route('/', methods=['GET'])
 def index():
 
