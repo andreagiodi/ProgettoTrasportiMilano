@@ -56,6 +56,7 @@ stazioni_milano = gpd.read_file(
 bike_sosta = gpd.read_file(
     '/workspace/ProgettoTrasportiMilano/filezip/bike_sosta.zip')
 
+#conversione crs e creazione delle colonne geometry in alcuni dataset, contenenti le coordinate
 area_sosta_car_sharing = area_sosta_car_sharing.to_crs(4326)
 area_sosta_car_sharing['lon'] = area_sosta_car_sharing['geometry'].x
 area_sosta_car_sharing['lat'] = area_sosta_car_sharing['geometry'].y
@@ -80,7 +81,7 @@ sosta_turistici['lat'] = sosta_turistici['geometry'].y
 percorsi_superficie = percorsi_superficie.drop_duplicates(subset=['linea']).dropna(subset=['linea'])
 percorsi_superficie['linea'] = percorsi_superficie['linea'].astype(int).sort_values()
 
-
+#home page secondaria
 @app.route('/home', methods=['GET'])
 def home():
     # folium mappa for per creare comune
@@ -191,7 +192,7 @@ def resultdrop():
                 popup=row['indirizzo'],
                 icon=folium.map.Icon(color='green')
             ).add_to(m)
-    if request.args.get('sel') == 'pedoni_ztl':  # parcheggi_pubblici
+    if request.args.get('sel') == 'pedoni_ztl':  # pedoni_ztl
         
         zip = pedoni_ztl['nome'].sort_values()
 
@@ -234,33 +235,12 @@ def resultdrop():
             geo_j.add_to(m)
 
 
-    if request.args.get('sel') == 'percorsi_metro':  # fermate_metro DA FINIRE
+    if request.args.get('sel') == 'percorsi_metro':  # fermate_metro 
         return redirect("/metro")
-        zip = fermate_metro['nome'].sort_values()
-
-        zipg = fermate_metro
-
-
-        a = 'fermate_metro'
-        key='false'
         
-        fermate_metro1 = fermate_metro[fermate_metro.linee=='1']
-        for _, row in fermate_metro1.iterrows():
-            folium.Marker(
-                location=[row["lat"], row["lon"]],
-                popup=row['nome'],
-                icon=folium.map.Icon(color='green')
-            ).add_to(m)
-        percorsi_metro1 = percorsi_metro[percorsi_metro.linea=='1']
-        for _, r in percorsi_metro1.iterrows():
-            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.000001)
-            geo_j = sim_geo.to_json()
-            geo_j = folium.GeoJson(data=geo_j, style_function=lambda x: {'fillColor': 'red', 'color' : 'red'})
-            folium.Popup(r['linea']).add_to(geo_j)
-            geo_j.add_to(m)
 
 
-    if request.args.get('sel') == 'percorsi_superficie': 
+    if request.args.get('sel') == 'percorsi_superficie': # percorsi_superficie 
         
         zip = percorsi_superficie["linea"].sort_values().map(str)
 
@@ -279,7 +259,7 @@ def resultdrop():
             folium.Popup(r['linea']).add_to(geo_j)
             geo_j.add_to(m)
 
-    if request.args.get('sel') == 'sosta_turistici':  # percorsi_superficie 
+    if request.args.get('sel') == 'sosta_turistici':  # sosta_turistici 
         
         zip = sosta_turistici['localizzaz'].sort_values()
 
@@ -299,7 +279,7 @@ def resultdrop():
 
 
     return render_template('index2.html', map=m._repr_html_(), percorsi_superficie=percorsi_superficie.to_html(), key=key ,zip=zip, title=title)
-
+#pagina a parte delle metropolitane
 @app.route('/metro', methods=['GET'])
 def metro():
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
@@ -379,9 +359,10 @@ def metro():
 
     return render_template('indexmetro.html', map=m._repr_html_(), map2=m1._repr_html_(), map3=m2._repr_html_(), map4=m3._repr_html_(),key=key ,zip=zip)
 
+#risposta secondo dropdown per dataset abilitati
 @app.route('/resultdrop1', methods=['GET'])
 def resultdrop1():
-    #dropdown di risposta delle (vie) di area_sosta e ogni altro dataframe (ancora da fare)
+    
     m = folium.Map(location=[45.46220047218434, 9.191121737490482],zoom_start=12, tiles='openstreetmap')
     key='true'
     value = request.args.get('sel1')
@@ -431,11 +412,11 @@ def resultdrop1():
     
     return render_template('index2.html', map=m._repr_html_(), key=key, zip=zip,title=title)
 
-
+#root di test
 @app.route('/testresult', methods=['GET'])
 def testresult():
 
-    # dopo selezione returna cio(puo fare infinito da ora):
+   
     if request.args['sel'] == 'aree_sosta':  # AREA_SOSTA
         
         m = folium.Map(location=[y[0], x[0]],
@@ -448,7 +429,7 @@ def testresult():
 
     return render_template('index.html', map=m._repr_html_(), table=ps)
 
-
+#root di test
 @app.route('/test', methods=['GET'])
 def test1():
     ps = bike_sosta
